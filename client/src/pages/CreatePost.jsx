@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { preview } from "../assets";
-import { getRandomPrompt, getRandomPrompt } from "../utils";
+import { getRandomPrompt } from "../utils";
 import { FormField, Loader } from "../components";
 import { useState } from "react";
 const CreatePost = () => {
@@ -25,7 +25,29 @@ const CreatePost = () => {
     setForm({ ...form, prompt: randomPrompt });
   };
 
-  const generateImg = () => {};
+  const generateImg = async () => {
+    if (form.prompt) {
+      try {
+        setGeneratingImg(true);
+        const response = await fetch("http://localhost:2020/api/v1/ai", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ prompt: form.prompt }),
+        });
+
+        const data = await response.json();
+        setForm({ ...form, photo: `data:image/jpeg;base64,${data.photo}` });
+      } catch (error) {
+        alert(error);
+      } finally {
+        setGeneratingImg(false);
+      }
+    } else {
+      alert("Please enter a prompt");
+    }
+  };
 
   return (
     <section className="max-w-7xl mx-auto">
