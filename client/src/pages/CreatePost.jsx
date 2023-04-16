@@ -26,10 +26,12 @@ const CreatePost = () => {
   };
 
   const generateImg = async () => {
+    const api = process.env.VITE_APP_SERVER_SITE_URL + "/api/v1/ai";
+
     if (form.prompt) {
       try {
         setGeneratingImg(true);
-        const response = await fetch("http://localhost:2020/api/v1/ai", {
+        const response = await fetch(api, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
